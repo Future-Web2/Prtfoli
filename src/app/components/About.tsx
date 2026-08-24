@@ -1,184 +1,124 @@
-import { motion } from "framer-motion";
-import { GlassCard } from "./GlassCard";
-import { Shield, Code2, Award, Zap } from "lucide-react";
+import { Section, Reveal } from "./Section";
+import { profile } from "../data";
 
-const stats = [
-  { icon: Shield, value: "5", label: "Security Certs", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/20" },
-  { icon: Code2, value: "15+", label: "Projects", color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
-  { icon: Award, value: "CRTA", label: "Red Team Certified", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-  { icon: Zap, value: "5+", label: "Years CyberSec", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20" },
+const principles = [
+  {
+    n: "01",
+    t: "Authorization first",
+    d: "No target is touched without written scope and rules of engagement. Every engagement starts on paper.",
+  },
+  {
+    n: "02",
+    t: "Impact over volume",
+    d: "A report full of informational noise helps nobody. I prove real, exploitable business impact and rank it honestly.",
+  },
+  {
+    n: "03",
+    t: "Findings you can action",
+    d: "Every issue ships with reproduction steps and a concrete fix — written so an engineer can act without a translator.",
+  },
+  {
+    n: "04",
+    t: "Build, then break",
+    d: "I ship production software too. Knowing how systems are built is what makes the assessment of them sharper.",
+  },
 ];
 
 export function About() {
   return (
-    <section id="about" className="relative py-28 px-6">
-      <div className="max-w-5xl mx-auto">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span
-            className="text-violet-400 text-xs uppercase tracking-widest mb-3 block"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            // about_me.exe
-          </span>
-          <h2
-            className="text-white mb-4"
-            style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Who Am{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #a78bfa, #22d3ee)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              I?
-            </span>
-          </h2>
-          <div className="w-16 h-0.5 bg-gradient-to-r from-violet-500 to-cyan-500 mx-auto rounded-full" />
-        </motion.div>
+    <Section
+      id="profile"
+      index="001"
+      label="Profile"
+      title="Offensive security, grounded in engineering."
+      intro={
+        <>
+          I work at the point where software gets built and where it gets broken — which is
+          usually the same place.
+        </>
+      }
+      divider={false}
+    >
+      <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+        {/* Narrative */}
+        <div className="lg:col-span-7 space-y-5">
+          <p className="text-[0.95rem] leading-[1.75]" style={{ color: "var(--text-2)" }}>
+            I&rsquo;m a penetration tester and full-stack engineer based in{" "}
+            <span style={{ color: "var(--text)" }}>{profile.location}</span>, operating as{" "}
+            <span style={{ color: "var(--text)" }}>Veranix Technology</span>. My training runs
+            through the Red-0 and Red-1 tracks at HAAD Training Center, and I hold red team and web
+            application credentials from CyberWarFare Labs.
+          </p>
+          <p className="text-[0.95rem] leading-[1.75]" style={{ color: "var(--text-2)" }}>
+            Day to day I architect a Learning Management System used across several training centres
+            in Tashkent — owning both its feature delivery and its security structure, from the
+            authentication model to server hardening. That dual role is the point: I am not a
+            consultant who has never shipped, nor a developer who has never been on the other side
+            of an exploit.
+          </p>
+          <p className="text-[0.95rem] leading-[1.75]" style={{ color: "var(--text-2)" }}>
+            Outside client work I publish privilege-escalation research and CTF write-ups, and I
+            build <span style={{ color: "var(--text)" }}>the AI SOC Platform</span> — an
+            authorization-aware system for continuous security validation with explainable,
+            structured reporting.
+          </p>
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Story card */}
-          <GlassCard delay={0.1} glow="purple" className="p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
-                <Shield size={20} className="text-violet-400" />
-              </div>
-              <h3
-                className="text-white"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 }}
-              >
-                My Story
-              </h3>
-            </div>
-            <div className="space-y-4">
-              <p
-                className="text-white/55 leading-relaxed"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem" }}
-              >
-                I'm <span className="text-violet-300">Yusufbek</span> — a security researcher and
-                full-stack developer from <span className="text-violet-300">Tashkent, Uzbekistan</span>,
-                building under the <span className="text-cyan-300">Veranix Technology</span> banner.
-                My journey started with curiosity about how systems can be broken — and turned into a
-                passion for offensive security, red teaming, and building software that's secure by design.
-              </p>
-              <p
-                className="text-white/55 leading-relaxed"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem" }}
-              >
-                I hold certifications in{" "}
-                <span className="text-violet-300">Red Team operations (CRTA)</span>,{" "}
-                <span className="text-emerald-300">Web Application Hacking (WEB-RTA)</span>, and{" "}
-                <span className="text-cyan-300">Cybersecurity Analysis (C3SA)</span>{" "}
-                from CyberWarFare Labs — plus penetration-testing credentials (HPTC, Red-0).
-                I pair offensive-security skills with front-end and AI engineering.
-              </p>
-              <p
-                className="text-white/55 leading-relaxed"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem" }}
-              >
-                Currently I work as a full-stack & security developer for education platforms in
-                Tashkent — <span className="text-violet-300">Pyramid Academy</span>,{" "}
-                <span className="text-violet-300">Iqbol LC</span> and{" "}
-                <span className="text-violet-300">Iqro LC</span> — architecting a full LMS, designing
-                its cybersecurity structure, and integrating AI agents. Beyond that I build
-                AI assistants, Telegram bots, and automated vulnerability-scanning platforms.
-              </p>
-            </div>
-
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mt-6">
-              {["Red Teamer", "Pentester", "OWASP Top 10", "Secure Coding", "AI Engineer", "LMS Architect", "Full-Stack Dev"].map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 rounded-lg text-xs border border-white/10 text-white/50"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    fontFamily: "'JetBrains Mono', monospace",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </GlassCard>
-
-          {/* Right side */}
-          <div className="space-y-6">
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((stat, i) => (
-                <GlassCard key={stat.label} delay={0.2 + i * 0.1} glow="none" className="p-5">
-                  <div className={`w-10 h-10 rounded-xl ${stat.bg} border ${stat.border} flex items-center justify-center mb-3`}>
-                    <stat.icon size={18} className={stat.color} />
-                  </div>
-                  <p
-                    className="text-white text-2xl font-bold"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
-                  >
-                    {stat.value}
-                  </p>
-                  <p
-                    className="text-white/40 text-xs"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                  >
-                    {stat.label}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
-
-            {/* Tools card */}
-            <GlassCard delay={0.5} glow="cyan" className="p-6">
-              <h3
-                className="text-white mb-4"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 }}
-              >
-                Favourite Tools
-              </h3>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { name: "Python", color: "#4f46e5" },
-                  { name: "Node.js", color: "#0891b2" },
-                  { name: "React", color: "#7c3aed" },
-                  { name: "VS Code", color: "#0e7490" },
-                  { name: "Docker", color: "#1d4ed8" },
-                  { name: "Kali Linux", color: "#4f46e5" },
-                  { name: "Burp Suite", color: "#0891b2" },
-                  { name: "Wireshark", color: "#7c3aed" },
-                  { name: "Metasploit", color: "#059669" },
-                  { name: "Telegram API", color: "#059669" },
-                ].map((tool) => (
-                  <div
-                    key={tool.name}
-                    className="px-3 py-2 rounded-lg text-center text-xs text-white/60 border border-white/8 transition-all duration-300 hover:text-white hover:border-white/20"
+          {/* Languages */}
+          <div className="pt-4">
+            <p className="mono mb-3 text-[10px]" style={{ color: "var(--text-3)", letterSpacing: "0.12em" }}>
+              LANGUAGES
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {["Python", "JavaScript", "TypeScript", "C", "C#", "Java", "Kotlin", "PHP", "SQL", "Bash", "PowerShell", "Assembly"].map(
+                (l) => (
+                  <span
+                    key={l}
+                    className="mono px-2 py-1 text-[10.5px]"
                     style={{
-                      background: `${tool.color}15`,
-                      fontFamily: "'JetBrains Mono', monospace",
+                      border: "1px solid var(--line)",
+                      borderRadius: "var(--r-sm)",
+                      color: "var(--text-2)",
                     }}
                   >
-                    {tool.name}
+                    {l}
+                  </span>
+                )
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Principles */}
+        <div className="lg:col-span-5">
+          <p className="mono mb-4 text-[10px]" style={{ color: "var(--text-3)", letterSpacing: "0.12em" }}>
+            HOW I WORK
+          </p>
+          <div className="panel divide-y" style={{ borderColor: "var(--line)" }}>
+            {principles.map((p, i) => (
+              <Reveal key={p.n} delay={i * 0.05}>
+                <div className="p-4" style={{ borderTop: i === 0 ? undefined : "1px solid var(--line)" }}>
+                  <div className="flex gap-3">
+                    <span
+                      className="mono text-[10px] pt-0.5 flex-shrink-0"
+                      style={{ color: "var(--sig)" }}
+                    >
+                      {p.n}
+                    </span>
+                    <div>
+                      <p className="text-[13px] font-medium mb-1" style={{ color: "var(--text)" }}>
+                        {p.t}
+                      </p>
+                      <p className="text-[12.5px] leading-relaxed" style={{ color: "var(--text-3)" }}>
+                        {p.d}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </GlassCard>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

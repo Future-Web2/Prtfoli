@@ -1,143 +1,174 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { profile } from "../data";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Certificates", href: "#certificates" },
-  { label: "Contact", href: "#contact" },
+  { label: "Profile", href: "#profile" },
+  { label: "Services", href: "#services" },
+  { label: "Method", href: "#method" },
+  { label: "Expertise", href: "#expertise" },
+  { label: "Experience", href: "#experience" },
+  { label: "Work", href: "#work" },
+  { label: "Credentials", href: "#credentials" },
+  { label: "Research", href: "#research" },
 ];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState<string>("");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  // Highlight the section currently in view.
+  useEffect(() => {
+    const ids = navLinks.map((l) => l.href.slice(1));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.25, 0.5] }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const go = (href: string) => {
     setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl"
-      >
-        <div
-          className="rounded-2xl px-6 py-3 flex items-center justify-between border border-white/10 transition-all duration-500"
-          style={{
-            background: scrolled
-              ? "rgba(4,4,15,0.85)"
-              : "rgba(255,255,255,0.05)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            boxShadow: scrolled
-              ? "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)"
-              : "0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
-          }}
+    <header
+      className="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
+      style={{
+        background: scrolled ? "rgba(10,11,13,0.88)" : "transparent",
+        backdropFilter: scrolled ? "blur(12px)" : undefined,
+        WebkitBackdropFilter: scrolled ? "blur(12px)" : undefined,
+        borderBottom: `1px solid ${scrolled ? "var(--line)" : "transparent"}`,
+      }}
+    >
+      <div className="mx-auto flex h-16 items-center justify-between px-6" style={{ maxWidth: "1120px" }}>
+        {/* Identity */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-2.5 group"
         >
-          {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2 group"
-          >
-            <img
-              src="/yusufbek-avatar.jpg"
-              alt="Veranix Technology"
-              className="w-8 h-8 rounded-lg object-cover border border-white/10 shadow-[0_0_16px_rgba(34,211,238,0.35)]"
-            />
+          <img
+            src="/yusufbek-avatar.jpg"
+            alt="Veranix Technology"
+            className="h-7 w-7 object-cover"
+            style={{ borderRadius: "var(--r-sm)", border: "1px solid var(--line-2)" }}
+          />
+          <span className="text-left leading-none">
             <span
-              className="text-white font-semibold text-sm tracking-wide"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              className="block text-[13px] font-semibold tracking-tight"
+              style={{ color: "var(--text)" }}
             >
-              Yusufbek<span className="text-violet-400">.</span>dev
+              {profile.name} Miyanmalikov
             </span>
-          </button>
+            <span
+              className="mono block text-[10px] mt-0.5"
+              style={{ color: "var(--text-3)", letterSpacing: "0.08em" }}
+            >
+              VERANIX TECHNOLOGY
+            </span>
+          </span>
+        </button>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-0.5">
+          {navLinks.map((link) => {
+            const isActive = active === link.href.slice(1);
+            return (
               <button
                 key={link.label}
-                onClick={() => handleNavClick(link.href)}
-                className="px-4 py-2 rounded-xl text-white/60 hover:text-white text-sm transition-all duration-300 hover:bg-white/8 relative group"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                onClick={() => go(link.href)}
+                className="mono px-2.5 py-1.5 text-[11px] transition-colors"
+                style={{
+                  color: isActive ? "var(--text)" : "var(--text-3)",
+                  letterSpacing: "0.05em",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = isActive ? "var(--text)" : "var(--text-3)")
+                }
               >
-                {link.label}
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 group-hover:w-4 h-0.5 bg-violet-400 rounded-full transition-all duration-300" />
+                {link.label.toUpperCase()}
               </button>
-            ))}
-          </div>
+            );
+          })}
+        </nav>
 
-          {/* CTA + Mobile Toggle */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => handleNavClick("#contact")}
-              className="hidden md:block px-4 py-2 rounded-xl text-sm text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.5)]"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(124,58,237,0.8), rgba(6,182,212,0.8))",
-                fontFamily: "'Space Grotesk', sans-serif",
-              }}
-            >
-              Hire Me
-            </button>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => go("#contact")}
+            className="hidden sm:inline-flex mono items-center gap-2 px-3.5 py-2 text-[11px] font-medium transition-colors"
+            style={{
+              color: "var(--sig)",
+              border: "1px solid var(--sig-line)",
+              background: "var(--sig-dim)",
+              borderRadius: "var(--r-sm)",
+              letterSpacing: "0.06em",
+            }}
+          >
+            <span
+              className="inline-block h-1.5 w-1.5 rounded-full"
+              style={{ background: "var(--sig)" }}
+            />
+            AVAILABLE
+          </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="lg:hidden p-2"
+            style={{ color: "var(--text-2)" }}
+            aria-label="Toggle navigation"
+          >
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.97 }}
-              transition={{ duration: 0.25 }}
-              className="mt-2 rounded-2xl border border-white/10 overflow-hidden"
+      {/* Mobile nav */}
+      {menuOpen && (
+        <nav
+          className="lg:hidden"
+          style={{ background: "var(--bg-1)", borderTop: "1px solid var(--line)" }}
+        >
+          {navLinks.map((link) => (
+            <button
+              key={link.label}
+              onClick={() => go(link.href)}
+              className="mono block w-full px-6 py-3.5 text-left text-[11px]"
               style={{
-                background: "rgba(4,4,15,0.95)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
+                color: "var(--text-2)",
+                borderBottom: "1px solid var(--line)",
+                letterSpacing: "0.06em",
               }}
             >
-              {navLinks.map((link) => (
-                <button
-                  key={link.label}
-                  onClick={() => handleNavClick(link.href)}
-                  className="w-full text-left px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all text-sm border-b border-white/5 last:border-0"
-                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
-                  {link.label}
-                </button>
-              ))}
-              <button
-                onClick={() => handleNavClick("#contact")}
-                className="w-full px-6 py-4 text-left text-sm text-violet-400 hover:bg-white/5 transition-all"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                Hire Me →
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-    </>
+              {link.label.toUpperCase()}
+            </button>
+          ))}
+          <button
+            onClick={() => go("#contact")}
+            className="mono block w-full px-6 py-3.5 text-left text-[11px]"
+            style={{ color: "var(--sig)", letterSpacing: "0.06em" }}
+          >
+            CONTACT →
+          </button>
+        </nav>
+      )}
+    </header>
   );
 }

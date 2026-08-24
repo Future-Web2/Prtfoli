@@ -14,12 +14,25 @@ Live site: **[veranix.xyz](https://veranix.xyz)** · GitHub: **[@Future-Web2](ht
 
 ## Sections
 
-- **Hero** — intro, animated role typewriter, Veranix branding
-- **About** — story, experience, live stats
-- **Skills** — offensive security, development, tooling & DevOps
-- **Projects** — pulled from [github.com/Future-Web2](https://github.com/Future-Web2)
-- **Certificates** — CRTA · WEB-RTA · C3SA · HPTC · Red-0
-- **Contact** — links + message form
+| # | Section | Contents |
+|---|---------|----------|
+| 001 | Profile | Positioning, working principles, languages |
+| 002 | Services | Five engagement types with deliverables |
+| 003 | Methodology | Six-phase engagement process + guarantees |
+| 004 | Expertise | Offensive / Defensive / Engineering capability matrix |
+| 005 | Experience & Education | Professional timeline and training track |
+| 006 | Selected Work | Projects from [github.com/Future-Web2](https://github.com/Future-Web2) |
+| 007 | Credentials | CRTA · WEB-RTA · C3SA · HPTC · Red-0 |
+| 008 | Research | Published PoCs and write-ups |
+| 009 | Contact | Engagement enquiry form |
+
+## Design system
+
+Tokens live in [`src/styles/design.css`](src/styles/design.css): near-black neutrals,
+a single signal accent (`--sig`), and a severity scale (`--sev-*`) for domain colour.
+
+> **Note:** the shadcn tokens in `theme.css` already define `--accent`, so this
+> system deliberately namespaces its own accent as `--sig` to avoid the collision.
 
 ## Getting started
 

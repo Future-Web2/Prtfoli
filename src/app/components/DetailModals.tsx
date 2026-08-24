@@ -1,7 +1,101 @@
-import { useEffect, useRef } from "react";
+import { useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, ExternalLink, Github, CheckCircle, Award, Zap } from "lucide-react";
-import { GlassCard } from "./GlassCard";
+import { X, ExternalLink, Github, ShieldCheck, ArrowUpRight } from "lucide-react";
+
+/* ── Shared shell ─────────────────────────────────────────────────────────── */
+
+function ModalShell({
+  eyebrow,
+  title,
+  subtitle,
+  onClose,
+  children,
+}: {
+  eyebrow: ReactNode;
+  title: string;
+  subtitle: ReactNode;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.18 }}
+        className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto p-4 sm:p-8"
+        style={{ background: "rgba(6,7,9,0.86)", backdropFilter: "blur(6px)" }}
+        onClick={(e) => e.target === e.currentTarget && onClose()}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.22, ease: [0.22, 0.61, 0.36, 1] }}
+          className="w-full my-auto"
+          style={{
+            maxWidth: "760px",
+            background: "var(--bg-1)",
+            border: "1px solid var(--line-2)",
+            borderRadius: "var(--r)",
+          }}
+        >
+          <div
+            className="sticky top-0 z-10 flex items-start justify-between gap-4 px-6 py-4"
+            style={{ background: "var(--bg-2)", borderBottom: "1px solid var(--line)" }}
+          >
+            <div className="min-w-0">
+              <div className="mono mb-1.5 text-[10px]" style={{ letterSpacing: "0.1em" }}>
+                {eyebrow}
+              </div>
+              <h2 className="text-[17px] font-semibold tracking-tight" style={{ color: "var(--text)" }}>
+                {title}
+              </h2>
+              <div className="mono mt-1 text-[11px]" style={{ color: "var(--text-3)" }}>
+                {subtitle}
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="grid h-8 w-8 flex-shrink-0 place-items-center"
+              style={{ color: "var(--text-3)", border: "1px solid var(--line-2)", borderRadius: "var(--r-sm)" }}
+            >
+              <X size={15} />
+            </button>
+          </div>
+
+          <div className="px-6 py-6">{children}</div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function Block({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <p className="mono mb-3 text-[10px]" style={{ color: "var(--text-4)", letterSpacing: "0.12em" }}>
+        {label}
+      </p>
+      {children}
+    </div>
+  );
+}
+
+/* ── Project modal ────────────────────────────────────────────────────────── */
 
 interface ProjectDetailProps {
   project: {
@@ -10,7 +104,6 @@ interface ProjectDetailProps {
     title: string;
     description: string;
     tags: string[];
-    color: string;
     github: string;
     demo: string;
     status: string;
@@ -21,257 +114,127 @@ interface ProjectDetailProps {
   onNavigate: (id: number) => void;
 }
 
+const statusFg: Record<string, string> = {
+  Active: "var(--sig)",
+  Complete: "var(--text-3)",
+  "In Progress": "var(--sev-medium)",
+  Research: "var(--sev-critical)",
+};
+
 export function ProjectModal({ project, allProjects, onClose, onNavigate }: ProjectDetailProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const Icon = project.icon;
-  const others = allProjects.filter((p) => p.id !== project.id);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  const scrollCarousel = (dir: "left" | "right") => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: dir === "right" ? 300 : -300, behavior: "smooth" });
-    }
-  };
-
-  const statusColors: Record<string, string> = {
-    Active: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
-    Complete: "text-cyan-400 bg-cyan-400/10 border-cyan-400/25",
-    "In Progress": "text-amber-400 bg-amber-400/10 border-amber-400/25",
-    Research: "text-rose-400 bg-rose-400/10 border-rose-400/25",
-  };
+  const others = allProjects.filter((p) => p.id !== project.id).slice(0, 6);
+  const repo = project.github.replace("https://github.com/", "");
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-        style={{ background: "rgba(4,4,15,0.85)", backdropFilter: "blur(16px)" }}
-        onClick={(e) => e.target === e.currentTarget && onClose()}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 30 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/12"
-          style={{
-            background: "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-            backdropFilter: "blur(24px)",
-            boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 60px ${project.color}25, inset 0 1px 0 rgba(255,255,255,0.1)`,
-          }}
-        >
-          {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between px-8 py-5 border-b border-white/8"
-            style={{ background: "rgba(4,4,15,0.7)", backdropFilter: "blur(20px)" }}>
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center border"
-                style={{ background: `${project.color}20`, borderColor: `${project.color}40` }}
+    <ModalShell
+      eyebrow={
+        <span style={{ color: statusFg[project.status] ?? "var(--text-3)" }}>
+          ● {project.status.toUpperCase()}
+        </span>
+      }
+      title={project.title}
+      subtitle={repo}
+      onClose={onClose}
+    >
+      <div className="space-y-7">
+        <p className="text-[13.5px] leading-[1.75]" style={{ color: "var(--text-2)" }}>
+          {project.description}
+        </p>
+
+        <Block label="KEY CAPABILITIES">
+          <ul className="space-y-2">
+            {project.highlights.map((h) => (
+              <li
+                key={h}
+                className="flex items-start gap-2.5 text-[12.5px] leading-relaxed"
+                style={{ color: "var(--text-3)" }}
               >
-                <Icon size={22} style={{ color: project.color }} />
-              </div>
-              <div>
-                <h2 className="text-white font-bold text-lg" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {project.title}
-                </h2>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-lg border ${statusColors[project.status]}`}
-                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                >
-                  {project.status}
-                </span>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-9 h-9 rounded-xl border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all"
+                  className="mt-[7px] inline-block h-1 w-1 flex-shrink-0"
+                  style={{ background: "var(--sig)" }}
+                />
+                {h}
+              </li>
+            ))}
+          </ul>
+        </Block>
+
+        <Block label="STACK">
+          <div className="flex flex-wrap gap-1.5">
+            {project.tags.map((t) => (
+              <span
+                key={t}
+                className="mono px-2 py-1 text-[10.5px]"
+                style={{
+                  border: "1px solid var(--line-2)",
+                  borderRadius: "var(--r-sm)",
+                  color: "var(--text-2)",
+                }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </Block>
+
+        <div className="flex flex-wrap gap-2 pt-1">
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-[12.5px]"
+            style={{
+              border: "1px solid var(--line-2)",
+              borderRadius: "var(--r-sm)",
+              color: "var(--text-2)",
+            }}
+          >
+            <Github size={14} /> View source
+          </a>
+          {project.demo && (
+            <a
+              href={project.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-[12.5px] font-medium"
+              style={{ background: "var(--sig)", color: "#06210c", borderRadius: "var(--r-sm)" }}
             >
-              <X size={18} />
-            </button>
-          </div>
+              <ExternalLink size={13} /> Open live demo
+            </a>
+          )}
+        </div>
 
-          <div className="p-8 space-y-8">
-            {/* Description */}
-            <div>
-              <p
-                className="text-white/65 leading-relaxed text-[0.95rem]"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                {project.description}
-              </p>
-            </div>
-
-            {/* Highlights */}
-            <div>
-              <h3
-                className="text-white/40 text-xs uppercase tracking-widest mb-4"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
-              >
-                Key Features
-              </h3>
-              <div className="space-y-2.5">
-                {project.highlights.map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.07 }}
-                    className="flex items-start gap-3"
+        {others.length > 0 && (
+          <Block label="OTHER WORK">
+            <div className="grid gap-px sm:grid-cols-2" style={{ background: "var(--line)" }}>
+              {others.map((p) => {
+                const PIcon = p.icon;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => onNavigate(p.id)}
+                    className="flex items-center gap-3 p-3 text-left transition-colors"
+                    style={{ background: "var(--bg-1)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-2)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "var(--bg-1)")}
                   >
-                    <div
-                      className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ background: `${project.color}20`, border: `1px solid ${project.color}40` }}
-                    >
-                      <Zap size={11} style={{ color: project.color }} />
-                    </div>
-                    <span
-                      className="text-white/65 text-sm"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                    >
-                      {h}
+                    <PIcon size={14} style={{ color: "var(--text-3)" }} />
+                    <span className="flex-1 truncate text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                      {p.title}
                     </span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div>
-              <h3
-                className="text-white/40 text-xs uppercase tracking-widest mb-3"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
-              >
-                Tech Stack
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1.5 rounded-lg text-xs border border-white/10 text-white/60"
-                    style={{
-                      background: `${project.color}12`,
-                      fontFamily: "'JetBrains Mono', monospace",
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Links */}
-            <div className="flex gap-3 pt-2">
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-white/70 border border-white/10 hover:text-white hover:border-white/25 transition-all"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", background: "rgba(255,255,255,0.04)" }}
-              >
-                <Github size={16} /> View Code
-              </a>
-              {project.demo && (
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-white font-semibold transition-all hover:scale-[1.02] hover:shadow-lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.color}cc, ${project.color})`,
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  <ExternalLink size={16} /> Live Demo
-                </a>
-              )}
-            </div>
-
-            {/* Other projects carousel */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3
-                  className="text-white/40 text-xs uppercase tracking-widest"
-                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                >
-                  Other Projects
-                </h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => scrollCarousel("left")}
-                    className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/25 transition-all"
-                  >
-                    <ChevronLeft size={14} />
+                    <ArrowUpRight size={12} style={{ color: "var(--text-4)" }} />
                   </button>
-                  <button
-                    onClick={() => scrollCarousel("right")}
-                    className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/25 transition-all"
-                  >
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
-              </div>
-              <div
-                ref={carouselRef}
-                className="flex gap-3 overflow-x-auto pb-2"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                {others.map((p) => {
-                  const PIcon = p.icon;
-                  return (
-                    <motion.button
-                      key={p.id}
-                      whileHover={{ scale: 1.03, y: -2 }}
-                      onClick={() => onNavigate(p.id)}
-                      className="flex-shrink-0 w-48 p-4 rounded-2xl border border-white/8 text-left transition-all hover:border-white/20"
-                      style={{
-                        background: "rgba(255,255,255,0.04)",
-                        backdropFilter: "blur(12px)",
-                      }}
-                    >
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center border mb-3"
-                        style={{ background: `${p.color}15`, borderColor: `${p.color}30` }}
-                      >
-                        <PIcon size={16} style={{ color: p.color }} />
-                      </div>
-                      <p
-                        className="text-white text-xs font-semibold mb-1 leading-snug"
-                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                      >
-                        {p.title}
-                      </p>
-                      <p
-                        className="text-white/40 text-[10px] leading-relaxed"
-                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                      >
-                        {p.tags.slice(0, 2).join(" · ")}
-                      </p>
-                    </motion.button>
-                  );
-                })}
-              </div>
+                );
+              })}
             </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+          </Block>
+        )}
+      </div>
+    </ModalShell>
   );
 }
 
-// ─── Certificate Modal ───────────────────────────────────────────────────────
+/* ── Certificate modal ────────────────────────────────────────────────────── */
 
 interface CertDetailProps {
   cert: {
@@ -280,8 +243,6 @@ interface CertDetailProps {
     fullTitle: string;
     issuer: string;
     date: string;
-    category: string;
-    color: string;
     credentialId: string;
     image: string;
     description: string;
@@ -293,208 +254,87 @@ interface CertDetailProps {
 }
 
 export function CertModal({ cert, allCerts, onClose, onNavigate }: CertDetailProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
   const others = allCerts.filter((c) => c.id !== cert.id);
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  const scrollCarousel = (dir: "left" | "right") => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: dir === "right" ? 300 : -300, behavior: "smooth" });
-    }
-  };
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-        style={{ background: "rgba(4,4,15,0.85)", backdropFilter: "blur(16px)" }}
-        onClick={(e) => e.target === e.currentTarget && onClose()}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 30 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/12"
-          style={{
-            background: "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-            backdropFilter: "blur(24px)",
-            boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 60px ${cert.color}25, inset 0 1px 0 rgba(255,255,255,0.1)`,
-          }}
-        >
-          {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between px-8 py-5 border-b border-white/8"
-            style={{ background: "rgba(4,4,15,0.7)", backdropFilter: "blur(20px)" }}>
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center border"
-                style={{ background: `${cert.color}20`, borderColor: `${cert.color}40` }}
-              >
-                <Award size={22} style={{ color: cert.color }} />
-              </div>
-              <div>
-                <h2 className="text-white font-bold text-lg" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {cert.title}
-                </h2>
-                <div className="flex items-center gap-1 text-emerald-400">
-                  <CheckCircle size={12} />
-                  <span className="text-xs" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Verified · {cert.issuer}</span>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-9 h-9 rounded-xl border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/25 transition-all"
-            >
-              <X size={18} />
-            </button>
-          </div>
+    <ModalShell
+      eyebrow={
+        <span style={{ color: "var(--sig)" }}>
+          <ShieldCheck size={11} className="mr-1 inline align-[-1px]" />
+          VERIFIED CREDENTIAL
+        </span>
+      }
+      title={cert.fullTitle}
+      subtitle={cert.issuer}
+      onClose={onClose}
+    >
+      <div className="space-y-7">
+        <div style={{ border: "1px solid var(--line)", borderRadius: "var(--r-sm)", overflow: "hidden" }}>
+          <img src={cert.image} alt={cert.fullTitle} className="block h-auto w-full" />
+        </div>
 
-          <div className="p-8 space-y-8">
-            {/* Certificate image */}
-            <div
-              className="rounded-2xl overflow-hidden border border-white/10"
-              style={{ boxShadow: `0 10px 40px ${cert.color}25` }}
-            >
-              <img
-                src={cert.image}
-                alt={cert.fullTitle}
-                className="w-full h-auto object-contain"
-                style={{ background: "rgba(255,255,255,0.02)" }}
-              />
-            </div>
-
-            {/* Full title & meta */}
-            <div
-              className="rounded-2xl p-5 border border-white/8"
-              style={{ background: `${cert.color}0c` }}
-            >
-              <p
-                className="text-white font-semibold mb-2"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                {cert.fullTitle}
+        <div className="grid gap-px sm:grid-cols-3" style={{ background: "var(--line)" }}>
+          {[
+            { k: "Issuer", v: cert.issuer },
+            { k: "Issued", v: cert.date },
+            { k: "Credential ID", v: cert.credentialId },
+          ].map((m) => (
+            <div key={m.k} className="p-3.5" style={{ background: "var(--bg-2)" }}>
+              <p className="mono text-[9.5px]" style={{ color: "var(--text-4)", letterSpacing: "0.1em" }}>
+                {m.k.toUpperCase()}
               </p>
-              <div className="flex gap-4 text-white/40 text-xs" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                <span>Issued: {cert.date}</span>
-                <span>·</span>
-                <span>ID: {cert.credentialId}</span>
-              </div>
+              <p className="mono mt-1.5 break-all text-[11.5px]" style={{ color: "var(--text-2)" }}>
+                {m.v}
+              </p>
             </div>
+          ))}
+        </div>
 
-            {/* Description */}
-            <p
-              className="text-white/60 leading-relaxed text-sm"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-            >
-              {cert.description}
-            </p>
+        <p className="text-[13px] leading-[1.75]" style={{ color: "var(--text-2)" }}>
+          {cert.description}
+        </p>
 
-            {/* Skills */}
-            <div>
-              <h3
-                className="text-white/40 text-xs uppercase tracking-widest mb-3"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+        <Block label="SKILLS VALIDATED">
+          <div className="flex flex-wrap gap-1.5">
+            {cert.skills.map((s) => (
+              <span
+                key={s}
+                className="mono px-2 py-1 text-[10.5px]"
+                style={{
+                  border: "1px solid var(--line-2)",
+                  borderRadius: "var(--r-sm)",
+                  color: "var(--text-2)",
+                }}
               >
-                Skills Validated
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {cert.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1.5 rounded-lg text-xs border text-white/70"
-                    style={{
-                      background: `${cert.color}15`,
-                      borderColor: `${cert.color}35`,
-                      fontFamily: "'JetBrains Mono', monospace",
-                    }}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Other certs carousel */}
-            {others.length > 0 && (
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3
-                    className="text-white/40 text-xs uppercase tracking-widest"
-                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  >
-                    Other Certificates
-                  </h3>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => scrollCarousel("left")}
-                      className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
-                    >
-                      <ChevronLeft size={14} />
-                    </button>
-                    <button
-                      onClick={() => scrollCarousel("right")}
-                      className="w-7 h-7 rounded-lg border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
-                    >
-                      <ChevronRight size={14} />
-                    </button>
-                  </div>
-                </div>
-                <div
-                  ref={carouselRef}
-                  className="flex gap-3 overflow-x-auto pb-2"
-                  style={{ scrollbarWidth: "none" }}
-                >
-                  {others.map((c) => (
-                    <motion.button
-                      key={c.id}
-                      whileHover={{ scale: 1.03, y: -2 }}
-                      onClick={() => onNavigate(c.id)}
-                      className="flex-shrink-0 w-52 rounded-2xl border border-white/8 overflow-hidden text-left hover:border-white/20 transition-all"
-                      style={{ background: "rgba(255,255,255,0.04)" }}
-                    >
-                      <img
-                        src={c.image}
-                        alt={c.title}
-                        className="w-full h-28 object-cover"
-                        style={{ objectPosition: "top" }}
-                      />
-                      <div className="p-3">
-                        <p
-                          className="text-white text-xs font-semibold"
-                          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                        >
-                          {c.title}
-                        </p>
-                        <p
-                          className="text-white/40 text-[10px]"
-                          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                        >
-                          {c.issuer}
-                        </p>
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-            )}
+                {s}
+              </span>
+            ))}
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </Block>
+
+        {others.length > 0 && (
+          <Block label="OTHER CREDENTIALS">
+            <div className="flex flex-wrap gap-1.5">
+              {others.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => onNavigate(c.id)}
+                  className="mono px-2.5 py-1.5 text-[11px] transition-colors"
+                  style={{
+                    border: "1px solid var(--line-2)",
+                    borderRadius: "var(--r-sm)",
+                    color: "var(--text-3)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-3)")}
+                >
+                  {c.title}
+                </button>
+              ))}
+            </div>
+          </Block>
+        )}
+      </div>
+    </ModalShell>
   );
 }

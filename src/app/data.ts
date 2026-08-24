@@ -356,3 +356,167 @@ export const certificates = [
     skills: ["Pentest Fundamentals", "Network Security", "Ethical Hacking", "Recon"],
   },
 ];
+
+// ─── Services ────────────────────────────────────────────────────────────────
+export const services = [
+  {
+    code: "SVC-01",
+    title: "Web Application Penetration Testing",
+    summary:
+      "Authenticated and unauthenticated assessment of web apps and APIs against the OWASP Top 10 and business-logic abuse.",
+    deliverables: ["Findings by CVSS severity", "Reproduction steps", "Remediation guidance", "Retest"],
+    tags: ["OWASP Top 10", "API Security", "AuthN/AuthZ", "XSS / SQLi"],
+  },
+  {
+    code: "SVC-02",
+    title: "Red Team & Adversary Simulation",
+    summary:
+      "Goal-oriented simulation of a real attacker: initial access, lateral movement, Active Directory abuse and post-exploitation.",
+    deliverables: ["Attack narrative", "MITRE ATT&CK mapping", "Detection gaps", "Executive debrief"],
+    tags: ["Active Directory", "Lateral Movement", "Evasion", "C2"],
+  },
+  {
+    code: "SVC-03",
+    title: "Network & Infrastructure Review",
+    summary:
+      "External and internal infrastructure assessment with hardening review for Linux and Windows Server estates.",
+    deliverables: ["Exposure inventory", "Hardening checklist", "Segmentation review", "Priority fix list"],
+    tags: ["Linux", "Windows Server", "IDS/IPS", "TCP/IP · DNS · TLS"],
+  },
+  {
+    code: "SVC-04",
+    title: "Secure Application Development",
+    summary:
+      "Full-stack delivery with security built in from the first commit — threat modelling, secure defaults and hardened deployment.",
+    deliverables: ["Production application", "Threat model", "Hardened deployment", "Handover docs"],
+    tags: ["React / TypeScript", "Node.js", "Python", "Docker"],
+  },
+  {
+    code: "SVC-05",
+    title: "AI Agents & Automation",
+    summary:
+      "Design and delivery of AI assistants and automation pipelines, with an authorization-aware boundary around every privileged action.",
+    deliverables: ["Agent implementation", "Guardrail design", "Integration", "Runbook"],
+    tags: ["AI Agents", "Telegram Bot API", "Prompt Engineering", "Automation"],
+  },
+];
+
+// ─── Engagement methodology ──────────────────────────────────────────────────
+export const methodology = [
+  {
+    phase: "01",
+    title: "Scoping & Authorization",
+    body: "Define targets, rules of engagement, testing windows and escalation contacts. Nothing is touched before written authorization is in place.",
+  },
+  {
+    phase: "02",
+    title: "Reconnaissance",
+    body: "Passive and active intelligence gathering: attack-surface mapping, subdomain and asset discovery, technology fingerprinting.",
+  },
+  {
+    phase: "03",
+    title: "Enumeration & Analysis",
+    body: "Service, endpoint and parameter enumeration. Authentication and authorization flows are mapped, then analysed for logic flaws.",
+  },
+  {
+    phase: "04",
+    title: "Exploitation",
+    body: "Controlled, evidence-driven exploitation to prove real impact — never destructive, always within the agreed scope.",
+  },
+  {
+    phase: "05",
+    title: "Post-Exploitation",
+    body: "Privilege escalation, lateral movement and data-access assessment to establish the true blast radius of an initial foothold.",
+  },
+  {
+    phase: "06",
+    title: "Reporting & Retest",
+    body: "Findings ranked by severity with reproduction steps, an executive summary for stakeholders, and a free retest once fixes land.",
+  },
+];
+
+// ─── Experience ──────────────────────────────────────────────────────────────
+export const experience = [
+  {
+    role: "Full-Stack & Security Developer",
+    org: "Iqro LC · Pyramid Academy · Iqbol LC",
+    location: "Tashkent, Uzbekistan",
+    period: "Feb 2026 — Present",
+    current: true,
+    points: [
+      "Architecting a full Learning Management System — an automated education platform serving multiple training centres.",
+      "Designing the platform's cybersecurity structure, authentication model and server hardening.",
+      "Integrating AI agents and automating financial calculation workflows.",
+    ],
+    stack: ["Node.js", "Python", "React", "Linux", "Docker", "AI Agents"],
+  },
+  {
+    role: "Security Researcher",
+    org: "Veranix Technology",
+    location: "Tashkent · Remote",
+    period: "2025 — Present",
+    current: true,
+    points: [
+      "Web application and red team assessments against authorized targets.",
+      "Privilege-escalation and CVE research, published as proof-of-concept write-ups.",
+      "Building the AI SOC Platform — authorization-aware continuous security validation with explainable reporting.",
+    ],
+    stack: ["Kali Linux", "Burp Suite", "Nmap", "Wireshark", "Python", "Bash"],
+  },
+];
+
+// ─── Education ───────────────────────────────────────────────────────────────
+export const education = [
+  {
+    school: "HAAD Training Center",
+    location: "Tashkent · Yunusobod",
+    field: "Cyber Security",
+    period: "Aug 2025 — May 2026",
+    detail: "Red-0: Cyber Security Fundamentals · Red-1: Junior Cyber Security Penetration Tester",
+  },
+  {
+    school: "Mars IT School",
+    location: "Tashkent · M. Ulugbek",
+    field: "Front-End Development",
+    period: "Feb 2023 — Jul 2025",
+    detail: "Vanilla JavaScript, React and modern web development.",
+  },
+  {
+    school: "Muallim Talim",
+    location: "Tashkent · Sergeli",
+    field: "IT Foundation",
+    period: "Jun 2023 — Aug 2023",
+    detail: "Computer science foundations.",
+  },
+];
+
+// ─── Research & write-ups ────────────────────────────────────────────────────
+export const research = [
+  {
+    severity: "High",
+    title: "In-Memory Privilege Escalation PoC",
+    year: "2026",
+    summary:
+      "Proof-of-concept demonstrating automated privilege elevation from a RAM-resident process to a root shell, documented for authorized lab use.",
+    link: "https://github.com/Future-Web2/CVE-Privilage-Escalation",
+    linkLabel: "Read the research",
+  },
+  {
+    severity: "Info",
+    title: "Haad Academy CTF — Full Write-up",
+    year: "2026",
+    summary:
+      "End-to-end write-up of the Haad Academy capture-the-flag: reconnaissance, foothold, escalation paths and the reasoning behind each step.",
+    link: "https://future-web2.github.io/DarkRoad-Report/",
+    linkLabel: "Read the write-up",
+  },
+  {
+    severity: "Medium",
+    title: "PEN-100 Reporting Standard",
+    year: "2026",
+    summary:
+      "A structured, explainable penetration-test reporting format built into the AI SOC Platform, designed so non-technical stakeholders can act on findings.",
+    link: "https://future-web2.github.io/SOC-APP/",
+    linkLabel: "View the platform",
+  },
+];
