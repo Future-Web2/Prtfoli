@@ -1,4 +1,4 @@
-import { Bot, Github, Globe } from "lucide-react";
+import { Github, Globe } from "lucide-react";
 import { profile } from "../data";
 
 export function Footer() {
@@ -14,9 +14,11 @@ export function Footer() {
           rel="noopener noreferrer"
           className="flex items-center gap-2 group"
         >
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br from-violet-500 to-cyan-500">
-            <Bot size={13} className="text-white" />
-          </div>
+          <img
+            src="/yusufbek-avatar.jpg"
+            alt="Veranix Technology"
+            className="w-7 h-7 rounded-lg object-cover border border-white/10"
+          />
           <span
             className="text-white/50 group-hover:text-white text-sm transition-colors"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}

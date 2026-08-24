@@ -18,7 +18,7 @@ Live site: **[veranix.xyz](https://veranix.xyz)** · GitHub: **[@Future-Web2](ht
 - **About** — story, experience, live stats
 - **Skills** — offensive security, development, tooling & DevOps
 - **Projects** — pulled from [github.com/Future-Web2](https://github.com/Future-Web2)
-- **Certificates** — CRTA · WEB-RTA · C3SA (+ 2 reserved slots for upcoming certs)
+- **Certificates** — CRTA · WEB-RTA · C3SA · HPTC · Red-0
 - **Contact** — links + message form
 
 ## Getting started
@@ -34,9 +34,10 @@ npm run build    # production build → dist/
 Most content lives in a single file: [`src/app/data.ts`](src/app/data.ts).
 
 - **Projects** — edit the `projects` array.
-- **Certificates** — edit the `certificates` array. To fill a reserved slot, drop the
-  image into `public/certificates/`, then set `image`, flip `placeholder` to `false`,
-  set `verified: true`, and fill in the details.
+- **Certificates** — edit the `certificates` array. To add one, drop the image into
+  `public/certificates/`, then add an entry with `image` pointing at it. Setting
+  `placeholder: true` instead renders a dashed "reserved slot" card for a cert
+  you haven't received yet.
 - **Links** — update the `profile` object (GitHub, website, Telegram, email).
 
 Certificate and profile images are served from [`public/`](public/).

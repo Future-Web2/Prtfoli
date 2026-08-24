@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Bot } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -52,9 +52,11 @@ export function Navbar() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-2 group"
           >
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-violet-500 to-cyan-500 shadow-[0_0_16px_rgba(124,58,237,0.5)]">
-              <Bot size={16} className="text-white" />
-            </div>
+            <img
+              src="/yusufbek-avatar.jpg"
+              alt="Veranix Technology"
+              className="w-8 h-8 rounded-lg object-cover border border-white/10 shadow-[0_0_16px_rgba(34,211,238,0.35)]"
+            />
             <span
               className="text-white font-semibold text-sm tracking-wide"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
