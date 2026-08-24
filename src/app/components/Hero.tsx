@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Code2, ChevronDown, Github, Mail, Terminal } from "lucide-react";
+import { Shield, Code2, ChevronDown, Github, Mail, Terminal, Globe } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-
-function TelegramIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.507 14.258l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.641.301z"/>
-    </svg>
-  );
-}
+import { profile } from "../data";
 
 const roles = [
   "Cybersecurity Specialist",
@@ -205,13 +198,15 @@ export function Hero() {
               className="flex gap-4 justify-center lg:justify-start"
             >
               {[
-                { label: "GitHub", href: "https://github.com", el: <Github size={18} /> },
-                { label: "Telegram", href: "https://t.me", el: <TelegramIcon size={18} /> },
+                { label: "GitHub", href: profile.github, el: <Github size={18} /> },
+                { label: "Website", href: profile.website, el: <Globe size={18} /> },
                 { label: "Email", href: "#contact", el: <Mail size={18} /> },
               ].map(({ label, href, el }) => (
                 <a
                   key={label}
                   href={href}
+                  target={href.startsWith("#") ? undefined : "_blank"}
+                  rel={href.startsWith("#") ? undefined : "noopener noreferrer"}
                   onClick={(e) => {
                     if (href.startsWith("#")) {
                       e.preventDefault();
@@ -258,8 +253,8 @@ export function Hero() {
               }}
             >
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1568992688065-536aad8a12f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Asilbek - Developer"
+                src="/yusufbek-avatar.jpg"
+                alt="Yusufbek — Veranix Technology"
                 className="w-full h-full object-cover"
               />
 
@@ -318,7 +313,7 @@ export function Hero() {
                 backdropFilter: "blur(12px)",
               }}
             >
-              <p className="text-white text-xs font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>3</p>
+              <p className="text-white text-xs font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>5</p>
               <p className="text-white/40 text-[10px]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Security Certs</p>
             </motion.div>
 

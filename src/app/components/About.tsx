@@ -3,8 +3,8 @@ import { GlassCard } from "./GlassCard";
 import { Shield, Code2, Award, Zap } from "lucide-react";
 
 const stats = [
-  { icon: Shield, value: "3", label: "Security Certs", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/20" },
-  { icon: Code2, value: "6+", label: "Projects", color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
+  { icon: Shield, value: "5", label: "Security Certs", color: "text-violet-400", bg: "bg-violet-500/10", border: "border-violet-500/20" },
+  { icon: Code2, value: "15+", label: "Projects", color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
   { icon: Award, value: "CRTA", label: "Red Team Certified", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
   { icon: Zap, value: "5+", label: "Years CyberSec", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20" },
 ];
@@ -70,10 +70,11 @@ export function About() {
                 className="text-white/55 leading-relaxed"
                 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem" }}
               >
-                I'm <span className="text-violet-300">Yusufbek</span> — a cybersecurity specialist from{" "}
-                <span className="text-violet-300">Tashkent, Uzbekistan</span>. My journey started
-                with curiosity about how systems can be broken — and quickly turned into a passion
-                for offensive security, red teaming, and building secure applications.
+                I'm <span className="text-violet-300">Yusufbek</span> — a security researcher and
+                full-stack developer from <span className="text-violet-300">Tashkent, Uzbekistan</span>,
+                building under the <span className="text-cyan-300">Veranix Technology</span> banner.
+                My journey started with curiosity about how systems can be broken — and turned into a
+                passion for offensive security, red teaming, and building software that's secure by design.
               </p>
               <p
                 className="text-white/55 leading-relaxed"
@@ -82,22 +83,26 @@ export function About() {
                 I hold certifications in{" "}
                 <span className="text-violet-300">Red Team operations (CRTA)</span>,{" "}
                 <span className="text-emerald-300">Web Application Hacking (WEB-RTA)</span>, and{" "}
-                <span className="text-cyan-300">Cybersecurity fundamentals (C3SA)</span>{" "}
-                from CyberWarFare Labs. I combine offensive security skills with
-                full-stack development to build software that's secure by design.
+                <span className="text-cyan-300">Cybersecurity Analysis (C3SA)</span>{" "}
+                from CyberWarFare Labs — plus penetration-testing credentials (HPTC, Red-0).
+                I pair offensive-security skills with front-end and AI engineering.
               </p>
               <p
                 className="text-white/55 leading-relaxed"
                 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "0.95rem" }}
               >
-                Beyond security, I also develop AI-powered Telegram bots, smart IoT dashboards, and
-                automated vulnerability scanning platforms — always with security at the core.
+                Currently I work as a full-stack & security developer for education platforms in
+                Tashkent — <span className="text-violet-300">Pyramid Academy</span>,{" "}
+                <span className="text-violet-300">Iqbol LC</span> and{" "}
+                <span className="text-violet-300">Iqro LC</span> — architecting a full LMS, designing
+                its cybersecurity structure, and integrating AI agents. Beyond that I build
+                AI assistants, Telegram bots, and automated vulnerability-scanning platforms.
               </p>
             </div>
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-6">
-              {["Red Teamer", "Pentester", "OWASP Top 10", "Secure Coding", "CTF Player", "Full-Stack Dev"].map((tag) => (
+              {["Red Teamer", "Pentester", "OWASP Top 10", "Secure Coding", "AI Engineer", "LMS Architect", "Full-Stack Dev"].map((tag) => (
                 <span
                   key={tag}
                   className="px-3 py-1 rounded-lg text-xs border border-white/10 text-white/50"

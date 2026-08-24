@@ -48,6 +48,7 @@ export function ProjectModal({ project, allProjects, onClose, onNavigate }: Proj
     Active: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
     Complete: "text-cyan-400 bg-cyan-400/10 border-cyan-400/25",
     "In Progress": "text-amber-400 bg-amber-400/10 border-amber-400/25",
+    Research: "text-rose-400 bg-rose-400/10 border-rose-400/25",
   };
 
   return (
@@ -175,21 +176,27 @@ export function ProjectModal({ project, allProjects, onClose, onNavigate }: Proj
             <div className="flex gap-3 pt-2">
               <a
                 href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-white/70 border border-white/10 hover:text-white hover:border-white/25 transition-all"
                 style={{ fontFamily: "'Space Grotesk', sans-serif", background: "rgba(255,255,255,0.04)" }}
               >
                 <Github size={16} /> View Code
               </a>
-              <a
-                href={project.demo}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-white font-semibold transition-all hover:scale-[1.02] hover:shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${project.color}cc, ${project.color})`,
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}
-              >
-                <ExternalLink size={16} /> Live Demo
-              </a>
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm text-white font-semibold transition-all hover:scale-[1.02] hover:shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${project.color}cc, ${project.color})`,
+                    fontFamily: "'Space Grotesk', sans-serif",
+                  }}
+                >
+                  <ExternalLink size={16} /> Live Demo
+                </a>
+              )}
             </div>
 
             {/* Other projects carousel */}

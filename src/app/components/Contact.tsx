@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "./GlassCard";
-import { Mail, Github, Send, MapPin, MessageSquare, CheckCircle } from "lucide-react";
+import { Mail, Github, Send, MapPin, MessageSquare, CheckCircle, Globe } from "lucide-react";
+import { profile } from "../data";
 
 // Telegram SVG icon (lucide doesn't have it)
 function TelegramIcon({ size = 16, color = "currentColor" }: { size?: number; color?: string }) {
@@ -13,9 +14,10 @@ function TelegramIcon({ size = 16, color = "currentColor" }: { size?: number; co
 }
 
 const socialLinks = [
-  { icon: Github, label: "GitHub", handle: "@yusufbek-dev", href: "https://github.com", color: "#ffffff", isSvg: false },
-  { icon: TelegramIcon, label: "Telegram", handle: "@yusufbek_dev", href: "https://t.me", color: "#2AABEE", isSvg: true },
-  { icon: Mail, label: "Email", handle: "yusufbek@dev.uz", href: "mailto:yusufbek@dev.uz", color: "#7c3aed", isSvg: false },
+  { icon: Github, label: "GitHub", handle: profile.githubHandle, href: profile.github, color: "#ffffff", isSvg: false },
+  { icon: Globe, label: "Website", handle: "veranix.xyz", href: profile.website, color: "#22d3ee", isSvg: false },
+  { icon: TelegramIcon, label: "Telegram", handle: profile.telegramHandle, href: profile.telegram, color: "#2AABEE", isSvg: true },
+  { icon: Mail, label: "Email", handle: profile.email, href: `mailto:${profile.email}`, color: "#7c3aed", isSvg: false },
 ];
 
 export function Contact() {

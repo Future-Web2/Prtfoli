@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "./GlassCard";
-import { Award, CheckCircle, ArrowRight } from "lucide-react";
+import { Award, CheckCircle, ArrowRight, Plus } from "lucide-react";
 import { certificates } from "../data";
 import { CertModal } from "./DetailModals";
 
@@ -11,12 +11,14 @@ export function Certificates() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
+  const realCerts = certificates.filter((c) => !c.placeholder);
+
   const filtered =
     activeCategory === "All"
       ? certificates
       : certificates.filter((c) => c.category === activeCategory);
 
-  const selectedCert = certificates.find((c) => c.id === selectedId) || null;
+  const selectedCert = realCerts.find((c) => c.id === selectedId) || null;
 
   return (
     <>
@@ -82,7 +84,7 @@ export function Certificates() {
                 >
                   {cat}
                   <span className="ml-2 text-xs opacity-60">
-                    {cat === "All" ? certificates.length : certificates.filter((c) => c.category === cat).length}
+                    {cat === "All" ? realCerts.length : realCerts.filter((c) => c.category === cat).length}
                   </span>
                 </button>
               ))}
@@ -91,7 +93,54 @@ export function Certificates() {
 
           {/* Certificates grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((cert, i) => (
+            {filtered.map((cert, i) =>
+              cert.placeholder ? (
+                /* Reserved slot — for an upcoming certificate */
+                <motion.div
+                  key={cert.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.5 }}
+                  className="h-full"
+                >
+                  <div
+                    className="h-full min-h-[300px] rounded-2xl border-2 border-dashed border-white/12 flex flex-col items-center justify-center text-center p-6 transition-all duration-300 hover:border-white/25"
+                    style={{ background: "rgba(255,255,255,0.02)" }}
+                  >
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center border mb-4"
+                      style={{
+                        background: `#${cert.colorHex}12`,
+                        borderColor: `#${cert.colorHex}30`,
+                      }}
+                    >
+                      <Plus size={22} style={{ color: cert.color }} />
+                    </div>
+                    <h3
+                      className="text-white/70 font-semibold text-sm mb-1"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {cert.title}
+                    </h3>
+                    <p
+                      className="text-white/30 text-xs mb-4 max-w-[15rem]"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {cert.fullTitle}
+                    </p>
+                    <span
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] border border-white/10 text-white/40"
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        background: "rgba(255,255,255,0.03)",
+                      }}
+                    >
+                      <span className="animate-pulse">●</span> Reserved · Coming soon
+                    </span>
+                  </div>
+                </motion.div>
+              ) : (
               <motion.div
                 key={cert.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -188,27 +237,9 @@ export function Certificates() {
                   </div>
                 </GlassCard>
               </motion.div>
-            ))}
+              )
+            )}
           </div>
-
-          {/* Placeholder for future certs */}
-          {filtered.length < 4 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 text-center"
-            >
-              <div
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/8 text-white/25 text-sm"
-                style={{ fontFamily: "'JetBrains Mono', monospace", background: "rgba(255,255,255,0.03)" }}
-              >
-                <span className="animate-pulse">●</span>
-                More certificates coming soon...
-              </div>
-            </motion.div>
-          )}
         </div>
       </section>
 
@@ -216,7 +247,7 @@ export function Certificates() {
       {selectedCert && (
         <CertModal
           cert={selectedCert}
-          allCerts={certificates}
+          allCerts={realCerts}
           onClose={() => setSelectedId(null)}
           onNavigate={(id) => setSelectedId(id)}
         />

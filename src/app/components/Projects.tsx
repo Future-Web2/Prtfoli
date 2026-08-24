@@ -2,13 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "./GlassCard";
 import { ExternalLink, Github, ArrowRight } from "lucide-react";
-import { projects } from "../data";
+import { projects, profile } from "../data";
 import { ProjectModal } from "./DetailModals";
 
 const statusColors: Record<string, string> = {
   Active: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
   Complete: "text-cyan-400 bg-cyan-400/10 border-cyan-400/25",
   "In Progress": "text-amber-400 bg-amber-400/10 border-amber-400/25",
+  Research: "text-rose-400 bg-rose-400/10 border-rose-400/25",
 };
 
 export function Projects() {
@@ -124,20 +125,26 @@ export function Projects() {
                 <div className="flex gap-3 pt-4 border-t border-white/8">
                   <a
                     href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs transition-colors"
                     style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                   >
                     <Github size={14} /> Code
                   </a>
-                  <a
-                    href={project.demo}
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs transition-colors"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                  >
-                    <ExternalLink size={14} /> Demo
-                  </a>
+                  {project.demo && (
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs transition-colors"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      <ExternalLink size={14} /> Demo
+                    </a>
+                  )}
                   <button
                     onClick={() => setSelectedId(project.id)}
                     className="ml-auto flex items-center gap-1.5 text-xs font-semibold transition-all hover:gap-2"
@@ -159,7 +166,9 @@ export function Projects() {
             className="text-center mt-10"
           >
             <a
-              href="#"
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm text-white/60 border border-white/10 hover:text-white hover:border-white/25 transition-all duration-300"
               style={{
                 backdropFilter: "blur(12px)",
